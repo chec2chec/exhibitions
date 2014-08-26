@@ -228,32 +228,38 @@ add_action( 'save_post', 'boj_mbe_save_meta' );
 
 function boj_mbe_save_meta( $post_id ) {	
 	//verify the metadata is set	
-
+	if (!empty($_POST)) {
 		//save the metadata
 		$allowed = array('true','false');
-		$safe_image = strip_tags($_POST['boj_mbe_image']);
-		if( in_array($safe_image, $allowed)) {
-			update_post_meta( $post_id, '_boj_mbe_image', $safe_image );
-		}else{
-			update_post_meta( $post_id, '_boj_mbe_image', '' );
+		
+		if ( isset($_POST['boj_mbe_image']) && $_POST['boj_mbe_image'] != null ) {
+			$safe_image = strip_tags($_POST['boj_mbe_image']);
+			if( in_array($safe_image, $allowed)) {
+				update_post_meta( $post_id, '_boj_mbe_image', $safe_image );
+			}else{
+				update_post_meta( $post_id, '_boj_mbe_image', '' );
+			}
 		}
 		
-		$save_public = strip_tags($_POST['boj_mbe_public']);
-		if( in_array($save_public, $allowed)) {
-			update_post_meta( $post_id, '_boj_mbe_public', $save_public );
-		}else{
-			update_post_meta( $post_id, '_boj_mbe_public', '' );
+		if ( isset($_POST['boj_mbe_public']) && $_POST['boj_mbe_public'] != null ) {
+			$safe_public = strip_tags($_POST['boj_mbe_public']);
+			if( in_array($safe_public, $allowed)) {
+				update_post_meta( $post_id, '_boj_mbe_public', $safe_public );
+			}else{
+				update_post_meta( $post_id, '_boj_mbe_public', '' );
+			}
 		}
 		
-		$save_type = strip_tags($_POST['boj_mbe_type']);
-		if( in_array($save_public, $allowed)) {
-			update_post_meta( $post_id, '_boj_mbe_type', $save_type );
-		}else{
-			update_post_meta( $post_id, '_boj_mbe_type', '' );
+		if ( isset($_POST['boj_mbe_type']) && $_POST['boj_mbe_type'] != null ) {
+			$safe_type = strip_tags($_POST['boj_mbe_type']);
+			if( in_array($safe_public, $allowed)) {
+				update_post_meta( $post_id, '_boj_mbe_type', $safe_type );
+			}else{
+				update_post_meta( $post_id, '_boj_mbe_type', '' );
+			}
 		}
 		
-		function validateNumber($number)
-		{
+		function validateNumber($number) {
 			$check = preg_match("/^-?[0-9]+(?:\.[0-9]{1,2})?$/", $number);
 			if($check == true) {
 				return $number;
@@ -262,14 +268,35 @@ function boj_mbe_save_meta( $post_id ) {
 			}
 		}
 
-		update_post_meta( $post_id, '_boj_mbe_size_height', validateNumber($_POST['boj_mbe_size_height']) );
-		update_post_meta( $post_id, '_boj_mbe_size_width', validateNumber($_POST['boj_mbe_size_width']) );
-		update_post_meta( $post_id, '_boj_mbe_size_depth', validateNumber($_POST['boj_mbe_size_depth']) );
+		if ( isset($_POST['boj_mbe_size_height']) && $_POST['boj_mbe_size_height'] != null ) {
+			$safe_size_height = validateNumber($_POST['boj_mbe_size_height']);
+			update_post_meta( $post_id, '_boj_mbe_size_height', $safe_size_height );
+		}
 		
-		update_post_meta( $post_id, '_boj_mbe_border_size_height', validateNumber($_POST['boj_mbe_border_size_height']) );
-		update_post_meta( $post_id, '_boj_mbe_border_size_width', validateNumber($_POST['boj_mbe_border_size_width']) );
+		if ( isset($_POST['boj_mbe_size_width']) && $_POST['boj_mbe_size_width'] != null ) {
+			$safe_size_width = validateNumber($_POST['boj_mbe_size_width']);
+			update_post_meta( $post_id, '_boj_mbe_size_width', $safe_size_width );
+		}
 		
-		update_post_meta( $post_id, '_boj_mbe_price', validateNumber($_POST['boj_mbe_price']) );
+		if ( isset($_POST['boj_mbe_size_depth']) && $_POST['boj_mbe_size_depth'] != null ) {
+			$safe_size_depth = validateNumber($_POST['boj_mbe_size_depth']);
+			update_post_meta( $post_id, '_boj_mbe_size_depth', $safe_size_depth );
+		}
+		
+		if ( isset($_POST['boj_mbe_border_size_height']) && $_POST['boj_mbe_border_size_height'] != null ) {
+			$safe_border_size_height = validateNumber($_POST['boj_mbe_border_size_height']);
+			update_post_meta( $post_id, '_boj_mbe_border_size_height', $safe_border_size_height );
+		}
 
+		if ( isset($_POST['boj_mbe_border_size_width']) && $_POST['boj_mbe_border_size_width'] != null ) {
+			$safe_border_size_width = validateNumber($_POST['boj_mbe_border_size_width']);
+			update_post_meta( $post_id, '_boj_mbe_border_size_width', $save_border_size_width );
+		}
+		
+		if ( isset($_POST['boj_mbe_price']) && $_POST['boj_mbe_price'] != null ) {
+			$safe_price = validateNumber($_POST['boj_mbe_price']);
+			update_post_meta( $post_id, '_boj_mbe_price', $safe_price );
+		}
+	}
 }
 ?>
