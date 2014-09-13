@@ -74,7 +74,7 @@ function boj_exhibitions_register_taxonomies() {
 	$exhibition_args = array(
 		'hierarchical' => false,
 		'query_var' => 'exhibition_category',
-		'show_tagcloud' => true,
+		'show_tagcloud' => false,
 		'rewrite' => array(
 			'slug' => 'exhibitions',
 			'with_front' => false
@@ -195,10 +195,10 @@ function boj_mbe_function( $post ) {
 				Size:
 			</th>
 			<td>
-				<input type="text" name="boj_mbe_size_height" value="<?php echo esc_attr( $boj_mbe_size_height ); ?>" />
+				<input type="text" name="boj_mbe_size_height" size="5" value="<?php echo esc_attr( $boj_mbe_size_height ); ?>" />
 				 x 
-				<input type="text" name="boj_mbe_size_width" value="<?php echo esc_attr( $boj_mbe_size_width ); ?>" />
-				<span id="boj_mbe_depth">x <input type="text" name="boj_mbe_size_depth" value="<?php echo esc_attr( $boj_mbe_size_depth ); ?>" /></span>
+				<input type="text" name="boj_mbe_size_width" size="5" value="<?php echo esc_attr( $boj_mbe_size_width ); ?>" />
+				<span id="boj_mbe_depth">x <input type="text" name="boj_mbe_size_depth" size="5" value="<?php echo esc_attr( $boj_mbe_size_depth ); ?>" /></span> cm
 			</td>
 		</tr>
 		<tr valign="top" id="boj_mbe_type">
@@ -206,8 +206,8 @@ function boj_mbe_function( $post ) {
 				Border Size:
 			</th>
 			<td>
-				<input type="text" name="boj_mbe_border_size_height" value="<?php echo esc_attr( $boj_mbe_border_size_height ); ?>" />
-				x <input type="text" name="boj_mbe_border_size_width" value="<?php echo esc_attr( $boj_mbe_border_size_width ); ?>" />
+				<input type="text" name="boj_mbe_border_size_height" size="5" value="<?php echo esc_attr( $boj_mbe_border_size_height ); ?>" />
+				x <input type="text" name="boj_mbe_border_size_width" size="5" value="<?php echo esc_attr( $boj_mbe_border_size_width ); ?>" /> cm
 			</td>
 		</tr>
 		<tr valign="top">
@@ -215,7 +215,7 @@ function boj_mbe_function( $post ) {
 				Price:
 			</th>
 			<td>
-				<input type="text" name="boj_mbe_price" value="<?php echo $boj_mbe_price; ?>" />
+				<input type="text" name="boj_mbe_price" size="15" value="<?php echo $boj_mbe_price; ?>" />
 			</td>
 		</tr>
 	</table>
@@ -290,7 +290,7 @@ function boj_mbe_save_meta( $post_id ) {
 
 		if ( isset($_POST['boj_mbe_border_size_width']) && $_POST['boj_mbe_border_size_width'] != null ) {
 			$safe_border_size_width = validateNumber($_POST['boj_mbe_border_size_width']);
-			update_post_meta( $post_id, '_boj_mbe_border_size_width', $save_border_size_width );
+			update_post_meta( $post_id, '_boj_mbe_border_size_width', $safe_border_size_width );
 		}
 		
 		if ( isset($_POST['boj_mbe_price']) && $_POST['boj_mbe_price'] != null ) {
