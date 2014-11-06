@@ -74,7 +74,7 @@ class Exhibitions {
         );
         /* Set up the category taxonomy arguments. */
         $exhibition_args = array(
-            'hierarchical' => false,
+            'hierarchical' => true,
             'query_var' => 'exhibition_category',
             'show_tagcloud' => false,
             'rewrite' => array(
@@ -234,7 +234,7 @@ class Exhibitions {
         self::save_painting_details_meta( $post_id );
     }
 
-    private function save_painting_details_meta( $post_id )
+    private static function save_painting_details_meta( $post_id )
     {
         //verify the metadata is set	
         if (!empty($_POST)) {
@@ -268,44 +268,44 @@ class Exhibitions {
                 }
             }
 
-            function validateNumber($number) {
-                $check = preg_match("/^-?[0-9]+(?:\.[0-9]{1,2})?$/", $number);
-                if($check == true) {
-                        return $number;
-                } else {
-                        return '';
-                }
-            }
-
             if ( isset($_POST['boj_mbe_size_height']) && $_POST['boj_mbe_size_height'] != null ) {
-                $safe_size_height = validateNumber($_POST['boj_mbe_size_height']);
+                $safe_size_height = self::validateNumber($_POST['boj_mbe_size_height']);
                 update_post_meta( $post_id, '_boj_mbe_size_height', $safe_size_height );
             }
 
             if ( isset($_POST['boj_mbe_size_width']) && $_POST['boj_mbe_size_width'] != null ) {
-                $safe_size_width = validateNumber($_POST['boj_mbe_size_width']);
+                $safe_size_width = self::validateNumber($_POST['boj_mbe_size_width']);
                 update_post_meta( $post_id, '_boj_mbe_size_width', $safe_size_width );
             }
 
             if ( isset($_POST['boj_mbe_size_depth']) && $_POST['boj_mbe_size_depth'] != null ) {
-                $safe_size_depth = validateNumber($_POST['boj_mbe_size_depth']);
+                $safe_size_depth = self::validateNumber($_POST['boj_mbe_size_depth']);
                 update_post_meta( $post_id, '_boj_mbe_size_depth', $safe_size_depth );
             }
 
             if ( isset($_POST['boj_mbe_border_size_height']) && $_POST['boj_mbe_border_size_height'] != null ) {
-                $safe_border_size_height = validateNumber($_POST['boj_mbe_border_size_height']);
+                $safe_border_size_height = self::validateNumber($_POST['boj_mbe_border_size_height']);
                 update_post_meta( $post_id, '_boj_mbe_border_size_height', $safe_border_size_height );
             }
 
             if ( isset($_POST['boj_mbe_border_size_width']) && $_POST['boj_mbe_border_size_width'] != null ) {
-                $safe_border_size_width = validateNumber($_POST['boj_mbe_border_size_width']);
+                $safe_border_size_width = self::validateNumber($_POST['boj_mbe_border_size_width']);
                 update_post_meta( $post_id, '_boj_mbe_border_size_width', $safe_border_size_width );
             }
 
             if ( isset($_POST['boj_mbe_price']) && $_POST['boj_mbe_price'] != null ) {
-                $safe_price = validateNumber($_POST['boj_mbe_price']);
+                $safe_price = self::validateNumber($_POST['boj_mbe_price']);
                 update_post_meta( $post_id, '_boj_mbe_price', $safe_price );
             }
+        }
+    }
+    
+    private static function validateNumber($number) {
+        $check = preg_match("/^-?[0-9]+(?:\.[0-9]{1,2})?$/", $number);
+        if($check == true) {
+                return $number;
+        } else {
+                return '';
         }
     }
 }
