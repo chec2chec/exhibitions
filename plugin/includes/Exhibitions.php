@@ -11,13 +11,14 @@ class Exhibitions {
     */
     public static function register_paintings_post_type()
     {
-        register_post_type( 'exhibitions', 
+        register_post_type( 'paintings', 
             array(
                 'public' => true,
-                'query_var' => 'exhibitions',
+                'has_archive' => true,
+                'query_var' => 'paintings',
                 'rewrite' => array(
-                    'slug' => 'exhibitions/paintings',
-                    'with_front' => false,
+                    'slug' => 'paintings',
+                    //'with_front' => false,
                 ),
                 'supports' => array(
                     'title',
@@ -45,41 +46,55 @@ class Exhibitions {
     //------------------------------------------------------------------------------
     /**
     * Register the custom taxonomies.
-    */	
-    public static function register_paintings_taxonomies()
+    */
+    public static function register_custom_taxonomies()
+    {
+        self::register_exhibition_authors_taxonomy();
+        self::register_exhibition_category_taxonomy();
+    }
+    
+    private static function register_exhibition_authors_taxonomy()
     {
         /* Set up the artist taxonomy arguments. */
-        $artist_args = array(
-            'hierarchical' => false,
-            'query_var' => 'exhibition_artist',
-            'show_tagcloud' => true,
+        $authors_args = array(
+            'hierarchical' => true,
+            'query_var' => true,
+            'show_tagcloud' => false,
             'rewrite' => array(
-                'slug' => 'exhibitions/artists',
-                'with_front' => false
+                'slug' => 'authors',
+                //'with_front' => false,
             ),
             'labels' => array(
-                'name' => 'Artists',
-                'singular_name' => 'Artist',
-                'edit_item' => 'Edit Artist',
-                'update_item' => 'Update Artist',
-                'add_new_item' => 'Add New Artist',
-                'new_item_name' => 'New Artist Name',
-                'all_items' => 'All Artists',
-                'search_items' => 'Search Artists',
-                'popular_items' => 'Popular Artists',
-                'separate_items_with_commas' => 'Separate artists with commas',
-                'add_or_remove_items' => 'Add or remove artists',
-                'choose_from_most_used' => 'Choose from the most popular artists',
+                'name' => 'Authors',
+                'singular_name' => 'Author',
+                'edit_item' => 'Edit Author',
+                'update_item' => 'Update Author',
+                'add_new_item' => 'Add New Author',
+                'new_item_name' => 'New Author Name',
+                'all_items' => 'All Authors',
+                'search_items' => 'Search Authors',
+                'popular_items' => 'Popular Authors',
+                'separate_items_with_commas' => 'Separate authors with commas',
+                'add_or_remove_items' => 'Add or remove authors',
+                'choose_from_most_used' => 'Choose from the most popular authors',
             ),
         );
+        
+        /* Register the album artist taxonomy. */
+        register_taxonomy( 'exhibition_authors', array('paintings') , $authors_args );
+        flush_rewrite_rules();
+    }
+        
+    private static function register_exhibition_category_taxonomy()
+    {        
         /* Set up the category taxonomy arguments. */
         $exhibition_args = array(
             'hierarchical' => true,
-            'query_var' => 'exhibition_category',
+            'query_var' => true,
             'show_tagcloud' => false,
             'rewrite' => array(
                 'slug' => 'exhibitions',
-                'with_front' => false
+                //'with_front' => false
             ),
             'labels' => array(
                 'name' => 'Exhibitions',
@@ -94,10 +109,10 @@ class Exhibitions {
                 'parent_item_colon' => 'Parent Exhibition:',
             ),
         );
-        /* Register the album artist taxonomy. */
-        register_taxonomy( 'exhibition_artist', array( 'exhibitions' ), $artist_args );
+
         /* Register the album genre taxonomy. */
-        register_taxonomy( 'exhibition_category', array( 'exhibitions' ), $exhibition_args );
+        register_taxonomy( 'exhibition_category', array('paintings') , $exhibition_args );
+        flush_rewrite_rules();
     }
 
     //------------------------------------------------------------------------------
@@ -111,7 +126,7 @@ class Exhibitions {
         wp_register_script( 'my-plugin-script', plugins_url( '../js/validation.js', __FILE__ ), array('jquery'), 0.01, false );
 
         if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
-            if ( 'exhibitions' === $post->post_type ) {     
+            if ( 'paintings' === $post->post_type ) {     
                 wp_enqueue_script( 'jquery' );
                 wp_enqueue_script( 'my-plugin-script' );
             }
@@ -125,7 +140,7 @@ class Exhibitions {
     public static function create_paintings_meta_boxes()
     {
         //create a custom meta box
-        add_meta_box( 'boj-meta', 'Painting Details', 'Exhibitions::create_paintings_details_meta_box', 'exhibitions', 'normal', 'high' );
+        add_meta_box( 'boj-meta', 'Painting Details', 'Exhibitions::create_paintings_details_meta_box', 'paintings', 'normal', 'high' );
     }
 
     public static function create_paintings_details_meta_box( $post )
@@ -269,43 +284,34 @@ class Exhibitions {
             }
 
             if ( isset($_POST['boj_mbe_size_height']) && $_POST['boj_mbe_size_height'] != null ) {
-                $safe_size_height = self::validateNumber($_POST['boj_mbe_size_height']);
+                $safe_size_height = Utils::validateNumber($_POST['boj_mbe_size_height']);
                 update_post_meta( $post_id, '_boj_mbe_size_height', $safe_size_height );
             }
 
             if ( isset($_POST['boj_mbe_size_width']) && $_POST['boj_mbe_size_width'] != null ) {
-                $safe_size_width = self::validateNumber($_POST['boj_mbe_size_width']);
+                $safe_size_width = Utils::validateNumber($_POST['boj_mbe_size_width']);
                 update_post_meta( $post_id, '_boj_mbe_size_width', $safe_size_width );
             }
 
             if ( isset($_POST['boj_mbe_size_depth']) && $_POST['boj_mbe_size_depth'] != null ) {
-                $safe_size_depth = self::validateNumber($_POST['boj_mbe_size_depth']);
+                $safe_size_depth = Utils::validateNumber($_POST['boj_mbe_size_depth']);
                 update_post_meta( $post_id, '_boj_mbe_size_depth', $safe_size_depth );
             }
 
             if ( isset($_POST['boj_mbe_border_size_height']) && $_POST['boj_mbe_border_size_height'] != null ) {
-                $safe_border_size_height = self::validateNumber($_POST['boj_mbe_border_size_height']);
+                $safe_border_size_height = Utils::validateNumber($_POST['boj_mbe_border_size_height']);
                 update_post_meta( $post_id, '_boj_mbe_border_size_height', $safe_border_size_height );
             }
 
             if ( isset($_POST['boj_mbe_border_size_width']) && $_POST['boj_mbe_border_size_width'] != null ) {
-                $safe_border_size_width = self::validateNumber($_POST['boj_mbe_border_size_width']);
+                $safe_border_size_width = Utils::validateNumber($_POST['boj_mbe_border_size_width']);
                 update_post_meta( $post_id, '_boj_mbe_border_size_width', $safe_border_size_width );
             }
 
             if ( isset($_POST['boj_mbe_price']) && $_POST['boj_mbe_price'] != null ) {
-                $safe_price = self::validateNumber($_POST['boj_mbe_price']);
+                $safe_price = Utils::validateNumber($_POST['boj_mbe_price']);
                 update_post_meta( $post_id, '_boj_mbe_price', $safe_price );
             }
-        }
-    }
-    
-    private static function validateNumber($number) {
-        $check = preg_match("/^-?[0-9]+(?:\.[0-9]{1,2})?$/", $number);
-        if($check == true) {
-                return $number;
-        } else {
-                return '';
         }
     }
 }
