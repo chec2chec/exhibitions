@@ -1,5 +1,4 @@
-
-
+<?php include_once('../plugins/exhibitions/includes/ExhibitionAuthors.php'); ?>
 <?php get_header(); ?>	
 
 <!-- Start of slider wrapper -->
@@ -53,9 +52,10 @@
 					
 					?>
 					<section>
-						<a href="<?php echo get_term_link($cat->slug, 'exhibition_authors'); ?>" title="<?php echo $cat->description ?>" class="portfolio_link">
-							<?php echo $cat->name;?><!--<img class="no_radius" src="<?php //echo z_taxonomy_image_url($cat->term_id); ?>" alt="<?php //echo $cat->name ?> Logo" height="64"/>-->
-						</a>
+                                            <a href="<?php echo get_term_link($cat->slug, 'exhibition_authors'); ?>" title="<?php echo $cat->description ?>" class="portfolio_link">
+                                                <img src="<?php echo ExhibitionAuthors::taxonomy_image_url($cat->term_id); ?>" alt="<?php echo $cat->name ?>" width=100 />
+                                                <?php echo $cat->name;?>
+                                            </a>
 					</section>
 				<?php echo '</div>'; ?>
 				<!-- End of one fifth -->

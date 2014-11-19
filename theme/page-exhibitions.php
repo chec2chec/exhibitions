@@ -1,4 +1,4 @@
-
+<?php include_once('../plugins/exhibitions/includes/ExhibitionCategory.php'); ?>
 <?php get_header(); ?>	
 <?php
 /*
@@ -31,7 +31,9 @@
 			 $i=0;
                          
                          $exh = get_terms('exhibition_category');
+                         //ExhibitionCategory::taxonomy_image_url
 			 foreach ($exh as $cat) : ?>
+                        
 			 <?php if($cat->parent == 0){?>
 			 
 			 	<!-- Start of one fifth -->
@@ -51,7 +53,8 @@
 					?>
 					<section>
 						<a href="<?php echo get_term_link($cat->slug, 'exhibition_category'); ?>" title="<?php echo $cat->description ?>" class="portfolio_link">
-							<?php echo $cat->name;?><!--<img class="no_radius" src="<?php //echo z_taxonomy_image_url($cat->term_id); ?>" alt="<?php //echo $cat->name ?> Logo" height="64"/>-->
+                                                        <img src="<?php echo ExhibitionCategory::taxonomy_image_url($cat->term_id); ?>" alt="<?php echo $cat->name ?>" width=100 />
+							<?php echo $cat->name;?>
 						</a>
 					</section>
 				<?php echo '</div>'; ?>

@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Description of ExhibitionCategory
+ * Description of ExhibitionAuthors
  *
  * @author chec2chec
  */
 
-class ExhibitionCategory {       
+class ExhibitionAuthors {       
     //------------------------------------------------------------------------------
     /**
-    * Creating Exhibition category custom fields.
+    * Creating Exhibition authors custom fields.
     */
-    public static function add_extra_fields_to_exhibition_category($taxonomy_name){
+    public static function add_extra_fields_to_exhibition_authors($taxonomy_name){
 	if (get_bloginfo('version') >= 3.5){
             wp_enqueue_media();
         } else {
@@ -29,7 +29,7 @@ class ExhibitionCategory {
         
         ?>
         <div class="form-field">
-            <label>Category Image<br/>
+            <label>Author Image<br/>
                 <input class="z_upload_image_button" type="text" name="taxonomy_image" id="taxonomy_image" 
                     value="<?php echo self::taxonomy_image_url(NULL, NULL, TRUE)?>" style="width: 74%"/>
                 <span style="width: 1%"></span>
@@ -39,18 +39,10 @@ class ExhibitionCategory {
             </label>
             <p>Click here and choose or browse a image.</p>
         </div>
-        <div class="form-field">
-            <label>Public
-                <select name="taxonomy_public">
-                    <option value="false">No</option>
-                    <option value="true">Yes</option>
-                </select>
-            </label>            
-        </div>
         <?php
     }
     
-    public static function edit_extra_fields_to_exhibition_category($taxonomy){
+    public static function edit_extra_fields_to_exhibition_authors($taxonomy){
 	if (get_bloginfo('version') >= 3.5){
             wp_enqueue_media();
         } else {
@@ -83,22 +75,10 @@ class ExhibitionCategory {
                 <button class="z_remove_image_button button" style="width: 20%"><?php _e('Remove', 'zci'); ?></button>
             </td>
         <tr class="form-field">
-	</tr>
-            <th scope="row">
-                <label for="taxonomy_public">Public</label>
-            </th>
-            <td>
-                <select name="taxonomy_public" id="taxonomy_public">
-                    <?php $taxonomy_public = get_option('taxonomy_public_'.$taxonomy->term_id);?>
-                    <option value="false" <?php if($taxonomy_public == "false"){ echo "selected";}?>>No</option>
-                    <option value="true" <?php if($taxonomy_public == "true"){ echo "selected";}?>>Yes</option>
-                </select>
-            </td>
-	</tr>
         <?php
     }
     
-    public static function exhibition_category_taxonomy_columns($columns){ 
+    public static function exhibition_authors_taxonomy_columns($columns){ 
 	$new_columns = array();
 	$new_columns['cb'] = $columns['cb'];
 	$new_columns['thumb'] = __('Image', 'zci');
@@ -106,7 +86,6 @@ class ExhibitionCategory {
         $new_columns['description'] = $columns['description'];
         $new_columns['slug'] = $columns['slug'];
         $new_columns['posts'] = $columns['posts'];
-        $new_columns['public'] = __('Public', 'zci');
         
 	unset( $columns['cb'] );
 	unset( $columns['name'] );
@@ -117,19 +96,9 @@ class ExhibitionCategory {
         return array_merge( $new_columns, $columns );
     }
     
-    public static function exhibition_category_taxonomy_thumb_column($columns, $column, $id){
+    public static function exhibition_authors_taxonomy_thumb_column($columns, $column, $id){
 	if ( $column == 'thumb' ){
             $columns = '<span><img src="'.self::taxonomy_image_url($id, NULL, TRUE).'" alt="' . __('Thumbnail', 'zci') . '" class="wp-post-image" width="100"/></span>';
-        }
-	
-	return $columns;
-    }
-    
-    public static function exhibition_category_taxonomy_public_column($columns, $column, $id){
-	if ( $column == 'public' ){
-            $taxonomy_public = get_option('taxonomy_public_'.$id);
-            $taxonomy_val = ($taxonomy_public == "true" ? "Yes" : "No"); 
-            $columns = '<span>'.$taxonomy_val.'</span>';
         }
 	
 	return $columns;
@@ -183,15 +152,8 @@ class ExhibitionCategory {
         }
     }
     
-    private static function exhibition_save_taxonomy_public_field($term_id) {
-        if(isset($_POST['taxonomy_public'])) {
-            update_option('taxonomy_public_'.$term_id, $_POST['taxonomy_public']);
-        }
-    }
-    
     public static function exhibition_save_taxonomy_custom_fields($term_id) {
         self::exhibition_save_taxonomy_image($term_id);
-        self::exhibition_save_taxonomy_public_field($term_id);
     }
     
     public static function quick_edit_custom_box( $column_name, $screen, $name ) {
